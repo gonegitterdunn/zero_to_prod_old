@@ -23,7 +23,7 @@ async fn test_subscribe_returns_200_for_valid_form_data() {
     let app_address = spawn_app();
     let configuration = get_configuration().expect("Couldn't load configuration file");
     let connection_string = configuration.database.connection_string();
-    let connection = PgConnection::connect(&connection_string)
+    let mut connection = PgConnection::connect(&connection_string)
         .await
         .expect("Unable to connect to postgres");
     let client = reqwest::Client::new();
@@ -45,7 +45,7 @@ async fn test_subscribe_returns_200_for_valid_form_data() {
         .expect("Failed to fetch saved subscription");
 
     assert_eq!(saved.email, "ursula_le_guin@gmail.com");
-    assert_eq!(saved.name, "ursula");
+    assert_eq!(saved.name, "le guin");
 }
 
 #[tokio::test]
