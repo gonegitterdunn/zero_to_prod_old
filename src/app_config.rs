@@ -1,13 +1,13 @@
 use serde::Deserialize;
 
 #[derive(Deserialize)]
-pub struct Settings {
-    pub database: DatabaseSettings,
+pub struct AppConfig {
+    pub database: DatabaseConfig,
     pub application_port: u16,
 }
 
 #[derive(Deserialize)]
-pub struct DatabaseSettings {
+pub struct DatabaseConfig {
     pub username: String,
     pub password: String,
     pub port: String,
@@ -15,13 +15,13 @@ pub struct DatabaseSettings {
     pub database_name: String,
 }
 
-pub fn get_configuration() -> Result<Settings, config::ConfigError> {
+pub fn get_configuration() -> Result<AppConfig, config::ConfigError> {
     let mut settings = config::Config::default();
-    settings.merge(config::File::with_name("configuration"))?;
+    settings.merge(config::File::with_name("configuration.yml"))?;
     settings.try_into()
 }
 
-impl DatabaseSettings {
+impl DatabaseConfig {
     pub fn connection_string(&self) -> String {
         format!(
             "postgres://{}:{}@{}:{}/{}",
