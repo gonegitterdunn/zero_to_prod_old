@@ -131,3 +131,32 @@ async fn test_subscribe_returns_400_for_invalid_form_data() {
         )
     }
 }
+
+#[tokio::test]
+async fn test_subscribe_returns_200_for_empty_form_data() {
+    let app = spawn_app().await;
+    let client = reqwest::Client::new();
+
+    let test_cases = vec![
+        ("name=le%20guin&email=", "empty email"),
+        ("name=&email=ursula_le_guin%40gmail.com", "empty name"),
+        ("name=name&email=not-an-email", "invalid email"),
+    ];
+
+    for (test_case, description) in test_cases {
+        let response = client
+            .post(&format!("{}/subscriptions", &app.address))
+            .header("Content-Type", "x-www-form-urlencoded")
+            .body(test_case)
+            .send()
+            .await
+            .expect("Failed to execute request");
+
+        assert_eq!(
+            200,
+            response.status().as_u16(),
+            "The API did not fail with 200 OK when the payload was: {}",
+            description
+        )
+    }
+}

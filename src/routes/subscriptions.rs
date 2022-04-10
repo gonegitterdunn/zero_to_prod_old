@@ -14,7 +14,7 @@ pub struct FormData {
     name = "Adding a new subscriber.",
     skip(form, pool),
     fields(
-        subsciber_email = %form.email,
+        subscriber_email = %form.email,
         subscriber_name = %form.name
     )
 )]
