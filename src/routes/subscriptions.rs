@@ -3,6 +3,7 @@ use actix_web::{web, HttpResponse};
 use chrono::Utc;
 use serde::Deserialize;
 use sqlx::PgPool;
+use tracing::instrument;
 use uuid::Uuid;
 
 #[derive(Deserialize)]
@@ -21,7 +22,7 @@ impl TryFrom<FormData> for NewSubscriber {
     }
 }
 
-#[tracing::instrument(
+#[instrument(
     name = "Adding a new subscriber.",
     skip(form, pool),
     fields(
@@ -40,10 +41,7 @@ pub async fn subscribe(form: web::Form<FormData>, pool: web::Data<PgPool>) -> Ht
     }
 }
 
-#[tracing::instrument(
-    name = "Saving new subscriber details in the database",
-    skip(new_subscriber, pool)
-)]
+#[instrument(name = "Saving new subscriber details in the database", skip_all)]
 pub async fn insert_subscriber(
     pool: &PgPool,
     new_subscriber: &NewSubscriber,

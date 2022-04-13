@@ -55,7 +55,7 @@ pub async fn spawn_app() -> TestApp {
         .expect("Failed to bind address");
     let _ = tokio::spawn(server);
     TestApp {
-        address: todo!,
+        address: todo!(),
         db_pool: get_connection_pool(&configuration.database),
     }
 }
