@@ -1,5 +1,5 @@
 use zero_to_prod::app_config::get_configuration;
-use zero_to_prod::startup::build;
+use zero_to_prod::startup::Application;
 use zero_to_prod::telemetry::{get_subscriber, init_subscriber};
 
 #[tokio::main]
@@ -8,7 +8,7 @@ async fn main() -> std::io::Result<()> {
     init_subscriber(subscriber);
 
     let configuration = get_configuration().expect("Configuration not loaded");
-    let server = build(configuration).await?;
-    server.await?;
+    let application = Application::build(configuration).await?;
+    application.run_until_stopped().await?;
     Ok(())
 }
